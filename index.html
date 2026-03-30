@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="MetricHMSR: Metric Human Mesh and Scene Recovery from Monocular Images.">
+  <meta name="keywords" content="MetricHMSR, human mesh recovery, metric human mesh, monocular depth, scene reconstruction">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MetricHMSR: Metric Human Mesh and Scene Recovery from Monocular Images</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <style>
+    .publication-title {
+      margin-bottom: 0.75rem !important;
+      line-height: 1.15;
+    }
+    .publication-authors,
+    .publication-venue {
+      margin-bottom: 0.4rem;
+    }
+    .contrib-note {
+      text-align: center;
+      margin-top: 0.15rem;
+      width: 100% !important;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+    .author-block {
+      margin-right: 0.2rem;
+      display: inline-block;
+    }
+    .button-row {
+      margin-top: 1rem;
+    }
+    .hero.teaser {
+      padding-top: 0;
+    }
+    .teaser-image,
+    .method-image,
+    .result-image,
+    .overview-image,
+    .component-image {
+      border-radius: 10px;
+      width: 100%;
+      display: block;
+    }
+    .rounded-media {
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .component-card,
+    .result-card {
+      border: 1px solid #dbdbdb;
+      border-radius: 12px;
+      background: #fff;
+      height: 100%;
+      overflow: hidden;
+    }
+    .component-card .content,
+    .result-card .content {
+      padding: 1rem 1.1rem 1.1rem;
+    }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #000;
+    }
+    .video-wrapper iframe,
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 10px;
+      background: #000;
+    }
+    pre code {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .caption-text {
+      margin-top: 0.8rem;
+      color: #4a4a4a;
+    }
+    .footer {
+      background: #efefef;
+      padding: 3rem 1.5rem 3rem;
+    }
+    .footer .content p {
+      margin-bottom: 0.75rem;
+    }
+    .overview-stack {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .overview-stack .overview-image {
+      margin: 0 auto;
+    }
+    .overview-text {
+      margin-top: 1.25rem;
+    }
+    .result-card {
+      display: flex;
+      flex-direction: column;
+    }
+    .result-media-frame {
+      width: 100%;
+      aspect-ratio: 4 / 4.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 10px 10px 0 0;
+      padding: 0;
+    }
+    .result-media-frame img,
+    .result-media-frame video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center center;
+      background: #fff;
+    }
+    .result-video .result-media-frame {
+      background: #fff;
+      padding: 0;
+    }
+    .result-video .result-media-frame video {
+      background: #000;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop publication-header">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">MetricHMSR:<br>Metric Human Mesh and Scene Recovery from Monocular Images</h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="#">Chentao Song</a><sup>*1</sup>,</span>
+              <span class="author-block"><a href="#">He Zhang</a><sup>*1</sup>,</span>
+              <span class="author-block"><a href="#">Haolei Yuan</a><sup>3</sup>,</span>
+              <span class="author-block"><a href="#">Haozhe Lin</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Jianhua Tao</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Hongwen Zhang</a><sup>†2</sup>,</span>
+              <span class="author-block"><a href="#">Tao Yu</a><sup>†1</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Tsinghua University,</span>
+              <span class="author-block"><sup>2</sup>Beijing Normal University,</span>
+              <span class="author-block"><sup>3</sup>Beihang University</span>
+            </div>
+
+            <div class="is-size-6 publication-venue contrib-note">
+              * Equal contribution.&nbsp;&nbsp;&nbsp;&nbsp;† Corresponding author.
+            </div>
+
+
+            <div class="column has-text-centered button-row">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2506.09919" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2506.09919" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/Metaverse-AI-Lab-THU/MetricHMSR" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#video" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-video"></i></span>
+                    <span>Video</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#bibtex" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-quote-right"></i></span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="./assets/teaser.png" alt="MetricHMSR teaser" class="teaser-image">
+        <h2 class="subtitle has-text-centered">
+          MetricHMSR jointly reconstructs human pose, metric shape, global position, and scene geometry from a single monocular image.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              We introduce MetricHMSR, a framework for recovering metric human meshes and 3D scenes from a single monocular image.
+              Existing methods struggle with metric scale due to monocular ambiguity and weak-perspective assumptions, and their fully
+              coupled feature representations make it difficult to disentangle local pose from global translation. To address this, MetricHMR
+              incorporates a bounding camera ray map to provide explicit metric cues for human reconstruction, together with a Human
+              Mixture-of-Experts (HumanMoE) that dynamically routes image features to specialized experts for disentangled perception of
+              local human pose and global metric position. Leveraging the recovered metric human as a geometric anchor, MetricHMSR further
+              refines monocular metric depth estimation to achieve more accurate 3D alignment between humans and scenes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section overview-section">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3 has-text-centered">Overview</h2>
+          <div class="overview-stack">
+            <img src="./assets/pipeline.png" alt="MetricHMSR pipeline" class="overview-image">
+            <p class="caption-text has-text-centered">Overall pipeline of MetricHMSR.</p>
+            <div class="content has-text-justified overview-text">
+              <p>
+                MetricHMSR consists of two components: <strong>MetricHMR</strong> for metric human mesh recovery, and a <strong>human-guided
+                metric depth refinement</strong> module for scene reconstruction.
+              </p>
+              <p>
+                Given a cropped human image and the corresponding bounding ray map, the model predicts SMPL pose, shape, and global translation.
+                The recovered metric human is then used as a geometric anchor to refine monocular metric depth and produce more physically
+                consistent human-scene reconstruction.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Key Ideas</h2>
+          <div class="columns is-multiline">
+            <div class="column is-4">
+              <div class="component-card">
+                <div class="content">
+                  <h3 class="title is-5">Bounding Ray Map</h3>
+                  <p>
+                    A pixel-aligned camera representation that encodes camera intrinsics, human image position, and the effects of cropping and scaling,
+                    providing explicit metric cues for reconstruction.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="component-card">
+                <div class="content">
+                  <h3 class="title is-5">HumanMoE</h3>
+                  <p>
+                    A Patch MoE and Global MoE jointly capture patch-level and image-level information, enabling feature-level disentanglement between
+                    local pose and global metric position.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="component-card">
+                <div class="content">
+                  <h3 class="title is-5">Human-Guided Depth Refinement</h3>
+                  <p>
+                    The reconstructed metric human serves as a geometric anchor to refine monocular metric depth, improving human-scene alignment and
+                    metric consistency.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Results</h2>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="result-card">
+            <div class="result-media-frame">
+              <img src="./assets/result1.png" alt="Metric human-scene reconstruction" class="result-image">
+            </div>
+            <div class="content">
+              <p><strong>Metric human-scene reconstruction.</strong> Qualitative examples of recovered human meshes aligned with reconstructed scenes.</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="result-card result-video">
+            <div class="result-media-frame">
+              <video controls playsinline preload="metadata" muted>
+                <source src="./assets/temporal_consistency.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="content">
+              <p><strong>Temporal consistency of MetricHMR.</strong> Video results showing stable metric shape and global position over time.</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="result-card">
+            <div class="result-media-frame">
+              <img src="./assets/result3.png" alt="Trajectory consistency" class="result-image">
+            </div>
+            <div class="content">
+              <p><strong>Trajectory consistency.</strong> Frame-wise reconstructions yield coherent global motion trajectories across time.</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="result-card">
+            <div class="result-media-frame">
+              <img src="./assets/result4.png" alt="Depth refinement results" class="result-image">
+            </div>
+            <div class="content">
+              <p><strong>Depth refinement results.</strong> Human-guided refinement improves metric scene depth and human-scene alignment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="video">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Video</h2>
+          <div class="video-wrapper">
+            <video controls playsinline preload="metadata" muted>
+              <source src="./assets/demo.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="bibtex">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">BibTeX</h2>
+<pre><code>@misc{song2025metrichmsrmetrichumanmeshscene,
+      title={MetricHMSR:Metric Human Mesh and Scene Recovery from Monocular Images}, 
+      author={Chentao Song and He Zhang and Haolei Yuan and Haozhe Lin and Jianhua Tao and Hongwen Zhang and Tao Yu},
+      year={2025},
+      eprint={2506.09919},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2506.09919}, 
+}</code></pre>
+      
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          This page was built using the
+          <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>
+          which was adopted from the
+          <a href="https://nerfies.github.io/" target="_blank" rel="noopener">Nerfies</a>
+          project page. You are free to borrow the source code of this website, we just ask that you link back to this page in the footer.
+        </p>
+        <p>
+          This website is licensed under a
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
